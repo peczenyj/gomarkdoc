@@ -57,5 +57,3 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/Weborama/gomarkdoc => github.com/Weborama/gomarkdoc v0.0.0-20230110134509-aea5aa55e374
