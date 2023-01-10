@@ -14,7 +14,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/princjef/gomarkdoc/logger"
+	"github.com/Weborama/gomarkdoc/logger"
 )
 
 type (
@@ -298,7 +298,6 @@ func getDocPkg(pkg *build.Package, fs *token.FileSet, includeUnexported bool) (*
 		},
 		parser.ParseComments,
 	)
-
 	if err != nil {
 		return nil, fmt.Errorf("gomarkdoc: failed to parse package: %w", err)
 	}

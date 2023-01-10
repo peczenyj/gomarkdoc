@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Weborama/gomarkdoc/lang"
+	"github.com/Weborama/gomarkdoc/logger"
 	"github.com/matryer/is"
-	"github.com/princjef/gomarkdoc/lang"
-	"github.com/princjef/gomarkdoc/logger"
 )
 
 func TestValue_Level(t *testing.T) {

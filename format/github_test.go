@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/Weborama/gomarkdoc/format"
+	"github.com/Weborama/gomarkdoc/lang"
 	"github.com/matryer/is"
-	"github.com/princjef/gomarkdoc/format"
-	"github.com/princjef/gomarkdoc/lang"
 )
 
 func TestGitHubFlavoredMarkdown_Bold(t *testing.T) {
@@ -97,9 +97,9 @@ func TestGitHubFlavoredMarkdown_RawHeader(t *testing.T) {
 
 func TestGitHubFlavoredMarkdown_LocalHref(t *testing.T) {
 	tests := map[string]string{
-		"Normal Header":       "#normal-header",
-		" Leading whitespace": "#leading-whitespace",
-		"Multiple	 whitespace": "#multiple--whitespace",
+		"Normal Header":          "#normal-header",
+		" Leading whitespace":    "#leading-whitespace",
+		"Multiple	 whitespace":   "#multiple--whitespace",
 		"Special(#)%^Characters": "#specialcharacters",
 		"With:colon":             "#withcolon",
 	}
@@ -155,7 +155,7 @@ func TestGitHubFlavoredMarkdown_CodeHref_noRepo(t *testing.T) {
 		Repo:     nil,
 	})
 	is.NoErr(err)
-	is.Equal(res, "")
+	is.Equal(res, "file.go#L12-L14")
 }
 
 func TestGitHubFlavoredMarkdown_Link(t *testing.T) {

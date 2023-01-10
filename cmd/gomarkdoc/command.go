@@ -19,10 +19,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/princjef/gomarkdoc"
-	"github.com/princjef/gomarkdoc/format"
-	"github.com/princjef/gomarkdoc/lang"
-	"github.com/princjef/gomarkdoc/logger"
+	"github.com/Weborama/gomarkdoc"
+	"github.com/Weborama/gomarkdoc/format"
+	"github.com/Weborama/gomarkdoc/lang"
+	"github.com/Weborama/gomarkdoc/logger"
 )
 
 // PackageSpec defines the data available to the --output option's template.
@@ -72,7 +72,7 @@ func buildCommand() *cobra.Command {
 
 	// cobra.OnInitialize(func() { buildConfig(configFile) })
 
-	var command = &cobra.Command{
+	command := &cobra.Command{
 		Use:   "gomarkdoc [package ...]",
 		Short: "generate markdown documentation for golang code",
 		RunE: func(cmd *cobra.Command, args []string) error {
