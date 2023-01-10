@@ -56,6 +56,7 @@ type commandOptions struct {
 	templateFileOverrides map[string]string
 	verbosity             int
 	includeUnexported     bool
+	forceRelativeURLs     bool
 	check                 bool
 	embed                 bool
 	version               bool
@@ -99,6 +100,7 @@ func buildCommand() *cobra.Command {
 			opts.repository.Remote = viper.GetString("repository.url")
 			opts.repository.DefaultBranch = viper.GetString("repository.defaultBranch")
 			opts.repository.PathFromRoot = viper.GetString("repository.path")
+			opts.forceRelativeURLs = viper.GetBool("forceRelativeURLs")
 
 			if opts.check && opts.output == "" {
 				return errors.New("gomarkdoc: check mode cannot be run without an output set")
@@ -222,6 +224,12 @@ func buildCommand() *cobra.Command {
 		"Manual override for the path from the root of the git repository used in place of automatic detection.",
 	)
 	command.Flags().BoolVar(
+		&opts.forceRelativeURLs,
+		"force-relative-urls",
+		false,
+		"Force relative URLs.",
+	)
+	command.Flags().BoolVar(
 		&opts.version,
 		"version",
 		false,
@@ -244,6 +252,7 @@ func buildCommand() *cobra.Command {
 	_ = viper.BindPFlag("repository.url", command.Flags().Lookup("repository.url"))
 	_ = viper.BindPFlag("repository.defaultBranch", command.Flags().Lookup("repository.default-branch"))
 	_ = viper.BindPFlag("repository.path", command.Flags().Lookup("repository.path"))
+	_ = viper.BindPFlag("forceRelativeURLs", command.Flags().Lookup("force-relative-urls"))
 
 	return command
 }
@@ -351,7 +360,7 @@ func resolveOverrides(opts commandOptions) ([]gomarkdoc.RendererOption, error) {
 	var f format.Format
 	switch opts.format {
 	case "github":
-		f = &format.GitHubFlavoredMarkdown{}
+		f = &format.GitHubFlavoredMarkdown{ForceRelativeURLs: opts.forceRelativeURLs}
 	case "azure-devops":
 		f = &format.AzureDevOpsMarkdown{}
 	case "plain":

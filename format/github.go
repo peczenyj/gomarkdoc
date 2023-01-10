@@ -14,7 +14,9 @@ import (
 // Flavored Markdown's syntax and semantics. See GitHub's documentation for
 // more details about their markdown format:
 // https://guides.github.com/features/mastering-markdown/
-type GitHubFlavoredMarkdown struct{}
+type GitHubFlavoredMarkdown struct {
+	ForceRelativeURLs bool
+}
 
 // Bold converts the provided text to bold
 func (f *GitHubFlavoredMarkdown) Bold(text string) (string, error) {
@@ -84,7 +86,7 @@ func (f *GitHubFlavoredMarkdown) CodeHref(loc lang.Location) (string, error) {
 	}
 
 	// If there's no repo, we can only compute a relative href.
-	if loc.Repo == nil {
+	if loc.Repo == nil || f.ForceRelativeURLs {
 		return fmt.Sprintf(
 			"%s#%s",
 			filepath.ToSlash(filepath.Base(relative)),
