@@ -63,9 +63,11 @@ func (f *GitHubFlavoredMarkdown) Link(text, href string) (string, error) {
 
 // CodeHref generates an href to the provided code entry.
 func (f *GitHubFlavoredMarkdown) CodeHref(loc lang.Location) (string, error) {
-	// If there's no repo, we can't compute an href
-	if loc.Repo == nil {
-		return "", nil
+	var locStr string
+	if loc.Start.Line == loc.End.Line {
+		locStr = fmt.Sprintf("L%d", loc.Start.Line)
+	} else {
+		locStr = fmt.Sprintf("L%d-L%d", loc.Start.Line, loc.End.Line)
 	}
 
 	var (
@@ -81,17 +83,19 @@ func (f *GitHubFlavoredMarkdown) CodeHref(loc lang.Location) (string, error) {
 		relative = loc.Filepath
 	}
 
+	// If there's no repo, we can only compute a relative href.
+	if loc.Repo == nil {
+		return fmt.Sprintf(
+			"%s#%s",
+			filepath.ToSlash(filepath.Base(relative)),
+			locStr,
+		), nil
+	}
+
 	full := filepath.Join(loc.Repo.PathFromRoot, relative)
 	p, err := filepath.Rel(string(filepath.Separator), full)
 	if err != nil {
 		return "", err
-	}
-
-	var locStr string
-	if loc.Start.Line == loc.End.Line {
-		locStr = fmt.Sprintf("L%d", loc.Start.Line)
-	} else {
-		locStr = fmt.Sprintf("L%d-L%d", loc.Start.Line, loc.End.Line)
 	}
 
 	return fmt.Sprintf(
