@@ -21,6 +21,8 @@ github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAE
 github.com/VividCortex/ewma v1.1.1/go.mod h1:2Tkkvm3sRDVXaiyucHiACn4cqf7DpdyLvmxzcbUokwA=
 github.com/VividCortex/ewma v1.2.0 h1:f58SaIzcDXrSy3kWaHNvuJgJ3Nmz59Zji6XoJR/q1ow=
 github.com/VividCortex/ewma v1.2.0/go.mod h1:nz4BbCtbLyFDeC9SUHbtcT5644juEuWfUAUnGx7j5l4=
+github.com/Weborama/gomarkdoc v0.0.0-20230110134509-aea5aa55e374 h1:cBZ1G+xXodgLoTRTskxnGrNgDH5mbFlga32Zhapf4Uc=
+github.com/Weborama/gomarkdoc v0.0.0-20230110134509-aea5aa55e374/go.mod h1:+o04FW4GNL2vPr/35yxMV/8eXjhsdNBBPMVVDOOTLec=
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7 h1:uSoVVbwJiQipAclBbw+8quDsfcvFjOpI5iCf4p/cqCs=
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7/go.mod h1:6zEj6s6u/ghQa61ZWa/C2Aw3RkjiTBOix7dkqa1VLIs=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -215,8 +217,6 @@ github.com/pkg/sftp v1.10.1/go.mod h1:lYOWFsE0bwd1+KfKJaKeuokY15vzFx25BLbzYYoAxZ
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/posener/complete v1.1.1/go.mod h1:em0nMJCgc9GFtwrmVmEMR/ZL6WyhyjMBndrE9hABlRI=
-github.com/princjef/gomarkdoc v0.4.1 h1:Ubt5OiHYi2PdxrDkWMeWM4ROrbvAGkIXBz3PquxglBM=
-github.com/princjef/gomarkdoc v0.4.1/go.mod h1:+o04FW4GNL2vPr/35yxMV/8eXjhsdNBBPMVVDOOTLec=
 github.com/princjef/mageutil v1.0.0 h1:1OfZcJUMsooPqieOz2ooLjI+uHUo618pdaJsbCXcFjQ=
 github.com/princjef/mageutil v1.0.0/go.mod h1:mkShhaUomCYfAoVvTKRcbAs8YSVPdtezI5j6K+VXhrs=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
