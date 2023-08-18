@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/go-git/go-git/v5 v5.3.0
-	github.com/matryer/is v1.4.0
+	github.com/matryer/is v1.4.1
 	github.com/princjef/mageutil v1.0.0
 	github.com/princjef/termdiff v0.1.0
 	github.com/russross/blackfriday/v2 v2.1.0
