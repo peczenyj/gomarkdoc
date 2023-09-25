@@ -310,9 +310,9 @@ func runCommand(paths []string, opts commandOptions) error {
 		return fmt.Errorf("gomarkdoc: invalid output template: %w", err)
 	}
 
-	specs := getSpecs(paths...)
+	specs := getSpecs(opts, paths...)
 
-	excluded := getSpecs(opts.excludeDirs...)
+	excluded := getSpecs(opts, opts.excludeDirs...)
 	if err := validateExcludes(excluded); err != nil {
 		return err
 	}
@@ -483,7 +483,16 @@ func getBuildPackage(path string, tags []string) (*build.Package, error) {
 	return pkg, nil
 }
 
-func getSpecs(paths ...string) []*PackageSpec {
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+
+	return !info.IsDir()
+}
+
+func getSpecs(opts commandOptions, paths ...string) []*PackageSpec {
 	var expanded []*PackageSpec
 	for _, path := range paths {
 		// Ensure that the path we're working with is normalized for the OS
@@ -492,20 +501,26 @@ func getSpecs(paths ...string) []*PackageSpec {
 
 		// Not a recursive path
 		if !strings.HasSuffix(path, fmt.Sprintf("%s...", string(os.PathSeparator))) {
-			isLocal := isLocalPath(path)
-			var dir string
-			if isLocal {
-				dir = path
+			if fileExists(filepath.Join(path, skipGomarkdocFile)) {
+				log := logger.New(getLogLevel(opts.verbosity), logger.WithField("dir", path))
+
+				log.Debugf("skip path: found %s file", skipGomarkdocFile)
 			} else {
-				dir = "."
+				isLocal := isLocalPath(path)
+				var dir string
+				if isLocal {
+					dir = path
+				} else {
+					dir = "."
+				}
+				expanded = append(expanded, &PackageSpec{
+					Dir:        dir,
+					ImportPath: path,
+					isWildcard: false,
+					isLocal:    isLocal,
+				})
+				continue
 			}
-			expanded = append(expanded, &PackageSpec{
-				Dir:        dir,
-				ImportPath: path,
-				isWildcard: false,
-				isLocal:    isLocal,
-			})
-			continue
 		}
 
 		// Remove the recursive marker so we can work with the path
@@ -514,21 +529,33 @@ func getSpecs(paths ...string) []*PackageSpec {
 		// Not a file path. Add the original path back to the list so as to not
 		// mislead someone into thinking we're processing the recursive path
 		if !isLocalPath(trimmedPath) {
-			expanded = append(expanded, &PackageSpec{
-				Dir:        ".",
-				ImportPath: path,
-				isWildcard: false,
-				isLocal:    false,
-			})
-			continue
+			if fileExists(filepath.Join(path, skipGomarkdocFile)) {
+				log := logger.New(getLogLevel(opts.verbosity), logger.WithField("dir", path))
+
+				log.Debugf("skip path: found %s file", skipGomarkdocFile)
+			} else {
+				expanded = append(expanded, &PackageSpec{
+					Dir:        ".",
+					ImportPath: path,
+					isWildcard: false,
+					isLocal:    false,
+				})
+				continue
+			}
 		}
 
-		expanded = append(expanded, &PackageSpec{
-			Dir:        trimmedPath,
-			ImportPath: trimmedPath,
-			isWildcard: true,
-			isLocal:    true,
-		})
+		if fileExists(filepath.Join(trimmedPath, skipGomarkdocFile)) {
+			log := logger.New(getLogLevel(opts.verbosity), logger.WithField("dir", trimmedPath))
+
+			log.Debugf("skip path: found %s file", skipGomarkdocFile)
+		} else {
+			expanded = append(expanded, &PackageSpec{
+				Dir:        trimmedPath,
+				ImportPath: trimmedPath,
+				isWildcard: true,
+				isLocal:    true,
+			})
+		}
 
 		queue := list.New()
 		queue.PushBack(trimmedPath)
@@ -562,12 +589,19 @@ func getSpecs(paths ...string) []*PackageSpec {
 						subPath = fmt.Sprintf("%s%s", cwdPathPrefix, subPath)
 					}
 
-					expanded = append(expanded, &PackageSpec{
-						Dir:        subPath,
-						ImportPath: subPath,
-						isWildcard: true,
-						isLocal:    true,
-					})
+					if fileExists(filepath.Join(subPath, skipGomarkdocFile)) {
+						log := logger.New(getLogLevel(opts.verbosity), logger.WithField("dir", subPath))
+
+						log.Debugf("skip path: found %s file", skipGomarkdocFile)
+					} else {
+						expanded = append(expanded, &PackageSpec{
+							Dir:        subPath,
+							ImportPath: subPath,
+							isWildcard: true,
+							isLocal:    true,
+						})
+					}
+
 					queue.PushBack(subPath)
 				}
 			}
@@ -627,8 +661,9 @@ func removeExcludes(specs []*PackageSpec, excludes []*PackageSpec) []*PackageSpe
 }
 
 const (
-	cwdPathPrefix    = "." + string(os.PathSeparator)
-	parentPathPrefix = ".." + string(os.PathSeparator)
+	cwdPathPrefix     = "." + string(os.PathSeparator)
+	parentPathPrefix  = ".." + string(os.PathSeparator)
+	skipGomarkdocFile = ".skipgomarkdoc"
 )
 
 func isLocalPath(path string) bool {
