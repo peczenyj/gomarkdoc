@@ -15,7 +15,6 @@ linters:
   disable:
     - gosimple
     - staticcheck
-    - structcheck
     - unused
 
 linters-settings:
@@ -27,6 +26,11 @@ linters-settings:
     max-func-lines: 10
   revive:
     min-confidence: 0.5
+    rules:
+      - name: package-comments
+        disabled: true
+      - name: unused-parameter
+        disabled: true
 
 issues:
   exclude-rules:

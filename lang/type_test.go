@@ -51,11 +51,11 @@ func TestFunc_netHttpResponseWriter(t *testing.T) {
 	is.Equal(typ.Summary(), "A ResponseWriter interface is used by an HTTP handler to construct an HTTP response.")
 	is.Equal(decl, `type ResponseWriter interface {
     // Header returns the header map that will be sent by
-    // WriteHeader. The Header map also is the mechanism with which
-    // Handlers can set HTTP trailers.
+    // [ResponseWriter.WriteHeader]. The [Header] map also is the mechanism with which
+    // [Handler] implementations can set HTTP trailers.
     //
-    // Changing the header map after a call to WriteHeader (or
-    // Write) has no effect unless the HTTP status code was of the
+    // Changing the header map after a call to [ResponseWriter.WriteHeader] (or
+    // [ResponseWriter.Write]) has no effect unless the HTTP status code was of the
     // 1xx class or the modified headers are trailers.
     //
     // There are two ways to set Trailers. The preferred way is to
@@ -64,9 +64,9 @@ func TestFunc_netHttpResponseWriter(t *testing.T) {
     // trailer keys which will come later. In this case, those
     // keys of the Header map are treated as if they were
     // trailers. See the example. The second way, for trailer
-    // keys not known to the Handler until after the first Write,
-    // is to prefix the Header map keys with the TrailerPrefix
-    // constant value. See TrailerPrefix.
+    // keys not known to the [Handler] until after the first [ResponseWriter.Write],
+    // is to prefix the [Header] map keys with the [TrailerPrefix]
+    // constant value.
     //
     // To suppress automatic response headers (such as "Date"), set
     // their value to nil.
@@ -74,11 +74,11 @@ func TestFunc_netHttpResponseWriter(t *testing.T) {
 
     // Write writes the data to the connection as part of an HTTP reply.
     //
-    // If WriteHeader has not yet been called, Write calls
+    // If [ResponseWriter.WriteHeader] has not yet been called, Write calls
     // WriteHeader(http.StatusOK) before writing the data. If the Header
     // does not contain a Content-Type line, Write adds a Content-Type set
     // to the result of passing the initial 512 bytes of written data to
-    // DetectContentType. Additionally, if the total size of all written
+    // [DetectContentType]. Additionally, if the total size of all written
     // data is under a few KB and there are no Flush calls, the
     // Content-Length header is added automatically.
     //
