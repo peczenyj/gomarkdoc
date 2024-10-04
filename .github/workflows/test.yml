@@ -21,17 +21,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Lint
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: lint
       - name: Doc Verify
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: docVerify
       - name: Test
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: test
