@@ -1,6 +1,8 @@
 module github.com/Weborama/gomarkdoc
 
-go 1.18
+go 1.23
+
+toolchain go1.23.2
 
 require (
 	github.com/go-git/go-git/v5 v5.3.0
