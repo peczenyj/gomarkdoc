@@ -502,27 +502,25 @@ func getLocalDir(path, fullModule string) string {
 }
 
 func getFullPackageName(opts commandOptions) (string, error) {
-	var fullPackageName string
-
-	if opts.forceLocalDir {
-		if opts.fullPackageName != "" {
-			fullPackageName = opts.fullPackageName
-		} else {
-			data, err := os.ReadFile("go.mod")
-			if err != nil {
-				return "", fmt.Errorf("unable to read module file: %w", err)
-			}
-
-			f, err := modfile.Parse("go.mod", data, nil)
-			if err != nil {
-				return "", fmt.Errorf("unable to parse module file: %w", err)
-			}
-
-			fullPackageName = f.Module.Mod.String()
-		}
+	if !opts.forceLocalDir {
+		return "", nil
 	}
 
-	return fullPackageName, nil
+	if opts.fullPackageName != "" {
+		return opts.fullPackageName, nil
+	}
+
+	data, err := os.ReadFile("go.mod")
+	if err != nil {
+		return "", fmt.Errorf("unable to read module file: %w", err)
+	}
+
+	f, err := modfile.Parse("go.mod", data, nil)
+	if err != nil {
+		return "", fmt.Errorf("unable to parse module file: %w", err)
+	}
+
+	return f.Module.Mod.String(), nil
 }
 
 func getSpecs(opts commandOptions, paths ...string) ([]*PackageSpec, error) {
