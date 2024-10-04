@@ -18,6 +18,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/mod/modfile"
 
 	"github.com/Weborama/gomarkdoc"
 	"github.com/Weborama/gomarkdoc/format"
@@ -51,6 +52,7 @@ type commandOptions struct {
 	footer                string
 	footerFile            string
 	format                string
+	fullPackageName       string
 	tags                  []string
 	templateOverrides     map[string]string
 	templateFileOverrides map[string]string
@@ -60,6 +62,7 @@ type commandOptions struct {
 	check                 bool
 	embed                 bool
 	version               bool
+	forceLocalDir         bool
 }
 
 // Flags populated by goreleaser
@@ -235,6 +238,18 @@ func buildCommand() *cobra.Command {
 		false,
 		"Print the version.",
 	)
+	command.Flags().StringVar(
+		&opts.fullPackageName,
+		"full-package-name",
+		"",
+		"will be used by option force-local-dir, instead read from go.mod file",
+	)
+	command.Flags().BoolVar(
+		&opts.forceLocalDir,
+		"force-local-dir",
+		false,
+		"if true, will use the full-package-name to infer the .Dir",
+	)
 
 	// We ignore the errors here because they only happen if the specified flag doesn't exist
 	_ = viper.BindPFlag("includeUnexported", command.Flags().Lookup("include-unexported"))
@@ -253,6 +268,8 @@ func buildCommand() *cobra.Command {
 	_ = viper.BindPFlag("repository.defaultBranch", command.Flags().Lookup("repository.default-branch"))
 	_ = viper.BindPFlag("repository.path", command.Flags().Lookup("repository.path"))
 	_ = viper.BindPFlag("forceRelativeURLs", command.Flags().Lookup("force-relative-urls"))
+	_ = viper.BindPFlag("fullPackageName", command.Flags().Lookup("full-package-name"))
+	_ = viper.BindPFlag("forceLocalDir", command.Flags().Lookup("force-local-dir"))
 
 	return command
 }
@@ -301,7 +318,10 @@ func runCommand(paths []string, opts commandOptions) error {
 		return fmt.Errorf("gomarkdoc: invalid output template: %w", err)
 	}
 
-	specs := getSpecs(paths...)
+	specs, err := getSpecs(opts, paths...)
+	if err != nil {
+		return err
+	}
 
 	if err := resolveOutput(specs, outputTmpl); err != nil {
 		return err
@@ -467,7 +487,48 @@ func getBuildPackage(path string, tags []string) (*build.Package, error) {
 	return pkg, nil
 }
 
-func getSpecs(paths ...string) []*PackageSpec {
+func getLocalDir(path, fullModule string) string {
+	const currDir = `.`
+
+	if fullModule == "" {
+		return currDir
+	}
+
+	if subpath, ok := strings.CutPrefix(path, fullModule); ok {
+		return currDir + subpath
+	}
+
+	return currDir
+}
+
+func getFullPackageName(opts commandOptions) (string, error) {
+	if !opts.forceLocalDir {
+		return "", nil
+	}
+
+	if opts.fullPackageName != "" {
+		return opts.fullPackageName, nil
+	}
+
+	data, err := os.ReadFile("go.mod")
+	if err != nil {
+		return "", fmt.Errorf("unable to read module file: %w", err)
+	}
+
+	f, err := modfile.Parse("go.mod", data, nil)
+	if err != nil {
+		return "", fmt.Errorf("unable to parse module file: %w", err)
+	}
+
+	return f.Module.Mod.String(), nil
+}
+
+func getSpecs(opts commandOptions, paths ...string) ([]*PackageSpec, error) {
+	fullPackageName, err := getFullPackageName(opts)
+	if err != nil {
+		return nil, err
+	}
+
 	var expanded []*PackageSpec
 	for _, path := range paths {
 		// Ensure that the path we're working with is normalized for the OS
@@ -481,7 +542,7 @@ func getSpecs(paths ...string) []*PackageSpec {
 			if isLocal {
 				dir = path
 			} else {
-				dir = "."
+				dir = getLocalDir(path, fullPackageName)
 			}
 			expanded = append(expanded, &PackageSpec{
 				Dir:        dir,
@@ -558,7 +619,7 @@ func getSpecs(paths ...string) []*PackageSpec {
 		}
 	}
 
-	return expanded
+	return expanded, nil
 }
 
 var ignoredDirs = []string{".git"}
