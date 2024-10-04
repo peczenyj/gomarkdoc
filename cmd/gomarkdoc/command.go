@@ -52,6 +52,7 @@ type commandOptions struct {
 	footer                string
 	footerFile            string
 	format                string
+	fullPackageName       string
 	tags                  []string
 	templateOverrides     map[string]string
 	templateFileOverrides map[string]string
@@ -237,11 +238,17 @@ func buildCommand() *cobra.Command {
 		false,
 		"Print the version.",
 	)
+	command.Flags().StringVar(
+		&opts.fullPackageName,
+		"full-package-name",
+		"",
+		"will be used by option force-local-dir, instead read from go.mod file",
+	)
 	command.Flags().BoolVar(
 		&opts.forceLocalDir,
 		"force-local-dir",
 		false,
-		"If true, will read the 'go.mod' and use the package name to infer the .Dir",
+		"if true, will use the full-package-name to infer the .Dir",
 	)
 
 	// We ignore the errors here because they only happen if the specified flag doesn't exist
@@ -261,6 +268,7 @@ func buildCommand() *cobra.Command {
 	_ = viper.BindPFlag("repository.defaultBranch", command.Flags().Lookup("repository.default-branch"))
 	_ = viper.BindPFlag("repository.path", command.Flags().Lookup("repository.path"))
 	_ = viper.BindPFlag("forceRelativeURLs", command.Flags().Lookup("force-relative-urls"))
+	_ = viper.BindPFlag("fullPackageName", command.Flags().Lookup("full-package-name"))
 	_ = viper.BindPFlag("forceLocalDir", command.Flags().Lookup("force-local-dir"))
 
 	return command
@@ -493,21 +501,34 @@ func getLocalDir(path, fullModule string) string {
 	return currDir
 }
 
-func getSpecs(opts commandOptions, paths ...string) ([]*PackageSpec, error) {
-	var fullModule string
+func getFullPackageName(opts commandOptions) (string, error) {
+	var fullPackageName string
 
 	if opts.forceLocalDir {
-		data, err := os.ReadFile("go.mod")
-		if err != nil {
-			return nil, fmt.Errorf("unable to read module file: %w", err)
-		}
+		if opts.fullPackageName != "" {
+			fullPackageName = opts.fullPackageName
+		} else {
+			data, err := os.ReadFile("go.mod")
+			if err != nil {
+				return "", fmt.Errorf("unable to read module file: %w", err)
+			}
 
-		f, err := modfile.Parse("go.mod", data, nil)
-		if err != nil {
-			return nil, fmt.Errorf("unable to parse module file: %w", err)
-		}
+			f, err := modfile.Parse("go.mod", data, nil)
+			if err != nil {
+				return "", fmt.Errorf("unable to parse module file: %w", err)
+			}
 
-		fullModule = f.Module.Mod.String()
+			fullPackageName = f.Module.Mod.String()
+		}
+	}
+
+	return fullPackageName, nil
+}
+
+func getSpecs(opts commandOptions, paths ...string) ([]*PackageSpec, error) {
+	fullPackageName, err := getFullPackageName(opts)
+	if err != nil {
+		return nil, err
 	}
 
 	var expanded []*PackageSpec
@@ -523,7 +544,7 @@ func getSpecs(opts commandOptions, paths ...string) ([]*PackageSpec, error) {
 			if isLocal {
 				dir = path
 			} else {
-				dir = getLocalDir(path, fullModule)
+				dir = getLocalDir(path, fullPackageName)
 			}
 			expanded = append(expanded, &PackageSpec{
 				Dir:        dir,
