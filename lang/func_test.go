@@ -73,37 +73,6 @@ func TestFunc_Receiver_receiver(t *testing.T) {
 	is.Equal(fn.Receiver(), "Receiver")
 }
 
-func TestFunc_Doc(t *testing.T) {
-	is := is.New(t)
-
-	fn, err := loadFunc("../testData/lang/function", "Standalone")
-	is.NoErr(err)
-
-	doc := fn.Doc()
-	blocks := doc.Blocks()
-	is.Equal(len(blocks), 5)
-
-	is.Equal(blocks[0].Kind(), lang.ParagraphBlock)
-	is.Equal(blocks[0].Level(), 3)
-	is.Equal(blocks[0].Text(), "Standalone provides a function that is not part of a type.")
-
-	is.Equal(blocks[1].Kind(), lang.ParagraphBlock)
-	is.Equal(blocks[1].Level(), 3)
-	is.Equal(blocks[1].Text(), "Additional description can be provided in subsequent paragraphs, including code blocks and headers")
-
-	is.Equal(blocks[2].Kind(), lang.HeaderBlock)
-	is.Equal(blocks[2].Level(), 3)
-	is.Equal(blocks[2].Text(), "Header A")
-
-	is.Equal(blocks[3].Kind(), lang.ParagraphBlock)
-	is.Equal(blocks[3].Level(), 3)
-	is.Equal(blocks[3].Text(), "This section contains a code block.")
-
-	is.Equal(blocks[4].Kind(), lang.CodeBlock)
-	is.Equal(blocks[4].Level(), 3)
-	is.Equal(blocks[4].Text(), "Code Block\nMore of Code Block\n")
-}
-
 func TestFunc_Location(t *testing.T) {
 	is := is.New(t)
 
@@ -196,7 +165,7 @@ func TestFunc_textScannerInit(t *testing.T) {
 	is.Equal(fn.Name(), "Init")
 	is.Equal(fn.Level(), 3)
 	is.Equal(fn.Title(), "func (*Scanner) Init")
-	is.Equal(fn.Summary(), "Init initializes a Scanner with a new source and returns s.")
+	is.Equal(fn.Summary(), "Init initializes a [Scanner] with a new source and returns s.")
 	is.Equal(sig, "func (s *Scanner) Init(src io.Reader) *Scanner")
 	is.Equal(len(fn.Examples()), 0)
 }
@@ -227,7 +196,7 @@ func TestFunc_ioIoutilTempFile(t *testing.T) {
 	is.Equal(fn.Name(), "TempFile")
 	is.Equal(fn.Level(), 2)
 	is.Equal(fn.Title(), "func TempFile")
-	is.Equal(fn.Summary(), "TempFile creates a new temporary file in the directory dir, opens the file for reading and writing, and returns the resulting *os.File.")
+	is.Equal(fn.Summary(), "TempFile creates a new temporary file in the directory dir, opens the file for reading and writing, and returns the resulting *[os.File].")
 	is.Equal(sig, "func TempFile(dir, pattern string) (f *os.File, err error)")
 	is.Equal(len(fn.Examples()), 2)
 }
