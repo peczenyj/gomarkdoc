@@ -5,12 +5,12 @@ package function
 // Additional description can be provided in subsequent paragraphs, including
 // code blocks and headers
 //
-// Header A
+// # Header A
 //
 // This section contains a code block.
 //
-// 	Code Block
-// 	More of Code Block
+//	Code Block
+//	More of Code Block
 func Standalone(p1 int, p2 string) (int, error) {
 	return p1, nil
 }
