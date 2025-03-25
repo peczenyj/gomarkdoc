@@ -468,7 +468,7 @@ func getBuildPackage(path string, tags []string) (*build.Package, error) {
 	if isLocalPath(path) {
 		pkg, err := ctx.ImportDir(path, build.ImportComment)
 		if err != nil {
-			return nil, fmt.Errorf("gomarkdoc: invalid package in directory: %s", path)
+			return nil, fmt.Errorf("gomarkdoc: invalid package in directory: %q: %w", path, err)
 		}
 
 		return pkg, nil
@@ -476,12 +476,12 @@ func getBuildPackage(path string, tags []string) (*build.Package, error) {
 
 	wd, err := os.Getwd()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("os.Getwd(): %w", err)
 	}
 
 	pkg, err := ctx.Import(path, wd, build.ImportComment)
 	if err != nil {
-		return nil, fmt.Errorf("gomarkdoc: invalid package at import path: %s", path)
+		return nil, fmt.Errorf("gomarkdoc: invalid package at import path: %s: %w", path, err)
 	}
 
 	return pkg, nil
