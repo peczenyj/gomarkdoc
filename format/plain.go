@@ -3,8 +3,8 @@ package format
 import (
 	"fmt"
 
-	"github.com/Weborama/gomarkdoc/format/formatcore"
-	"github.com/Weborama/gomarkdoc/lang"
+	"github.com/peczenyj/gomarkdoc/format/formatcore"
+	"github.com/peczenyj/gomarkdoc/lang"
 )
 
 // PlainMarkdown provides a Format which is compatible with the base Markdown

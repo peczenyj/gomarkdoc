@@ -5,8 +5,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/Weborama/gomarkdoc/format"
-	"github.com/Weborama/gomarkdoc/lang"
+	"github.com/peczenyj/gomarkdoc/format"
+	"github.com/peczenyj/gomarkdoc/lang"
 )
 
 type (

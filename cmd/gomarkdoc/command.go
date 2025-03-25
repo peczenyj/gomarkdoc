@@ -20,10 +20,10 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/mod/modfile"
 
-	"github.com/Weborama/gomarkdoc"
-	"github.com/Weborama/gomarkdoc/format"
-	"github.com/Weborama/gomarkdoc/lang"
-	"github.com/Weborama/gomarkdoc/logger"
+	"github.com/peczenyj/gomarkdoc"
+	"github.com/peczenyj/gomarkdoc/format"
+	"github.com/peczenyj/gomarkdoc/lang"
+	"github.com/peczenyj/gomarkdoc/logger"
 )
 
 // PackageSpec defines the data available to the --output option's template.

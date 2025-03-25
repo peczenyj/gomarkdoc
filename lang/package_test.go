@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Weborama/gomarkdoc/lang"
-	"github.com/Weborama/gomarkdoc/logger"
+	"github.com/peczenyj/gomarkdoc/lang"
+	"github.com/peczenyj/gomarkdoc/logger"
 	"github.com/matryer/is"
 )
 
@@ -56,8 +56,8 @@ func TestPackage_dotImport(t *testing.T) {
 	pkg, err := loadPackage(".")
 	is.NoErr(err)
 
-	is.Equal(pkg.Import(), `import "github.com/Weborama/gomarkdoc/testData/lang/function"`)
-	is.Equal(pkg.ImportPath(), `github.com/Weborama/gomarkdoc/testData/lang/function`)
+	is.Equal(pkg.Import(), `import "github.com/peczenyj/gomarkdoc/testData/lang/function"`)
+	is.Equal(pkg.ImportPath(), `github.com/peczenyj/gomarkdoc/testData/lang/function`)
 }
 
 func TestPackage_strings(t *testing.T) {

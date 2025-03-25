@@ -1,6 +1,6 @@
 package format
 
-import "github.com/Weborama/gomarkdoc/lang"
+import "github.com/peczenyj/gomarkdoc/lang"
 
 // Format is a generic interface for formatting documentation contents in a
 // particular way.

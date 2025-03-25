@@ -1,11 +1,11 @@
 output: "{{.Dir}}/README.md"
 header: |+
-  [![Go Report Card](https://goreportcard.com/badge/github.com/Weborama/gomarkdoc)](https://goreportcard.com/report/github.com/Weborama/gomarkdoc)
-  [![GitHub Actions](https://github.com/Weborama/gomarkdoc/workflows/Test/badge.svg)](https://github.com/Weborama/gomarkdoc/actions?query=workflow%3ATest+branch%3Amaster)
-  [![Go Reference](https://pkg.go.dev/badge/github.com/Weborama/gomarkdoc.svg)](https://pkg.go.dev/github.com/Weborama/gomarkdoc)
+  [![Go Report Card](https://goreportcard.com/badge/github.com/peczenyj/gomarkdoc)](https://goreportcard.com/report/github.com/peczenyj/gomarkdoc)
+  [![GitHub Actions](https://github.com/peczenyj/gomarkdoc/workflows/Test/badge.svg)](https://github.com/peczenyj/gomarkdoc/actions?query=workflow%3ATest+branch%3Amaster)
+  [![Go Reference](https://pkg.go.dev/badge/github.com/peczenyj/gomarkdoc.svg)](https://pkg.go.dev/github.com/peczenyj/gomarkdoc)
   [![codecov](https://codecov.io/gh/princjef/gomarkdoc/branch/master/graph/badge.svg?token=171XNH5XLT)](https://codecov.io/gh/princjef/gomarkdoc)
   
 repository:
-  url: https://github.com/Weborama/gomarkdoc
+  url: https://github.com/peczenyj/gomarkdoc
   defaultBranch: master
   path: /

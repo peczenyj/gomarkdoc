@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/Weborama/gomarkdoc/lang"
-	"github.com/Weborama/gomarkdoc/logger"
+	"github.com/peczenyj/gomarkdoc/lang"
+	"github.com/peczenyj/gomarkdoc/logger"
 	"github.com/matryer/is"
 )
 

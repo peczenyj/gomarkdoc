@@ -1,4 +1,4 @@
-module github.com/Weborama/gomarkdoc
+module github.com/peczenyj/gomarkdoc
 
 go 1.23
 
